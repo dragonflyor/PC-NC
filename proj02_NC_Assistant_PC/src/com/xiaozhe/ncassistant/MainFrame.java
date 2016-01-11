@@ -15,11 +15,17 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import com.xiaozhe.ncassistant.panels.HomePanel;
+
 public class MainFrame extends Frame {
 
 	//窗口的宽和高
 	static int FRAME_WIDTH = 800;
 	static int FRAME_HEIGHT = 500;
+	
+	//页面
+	static HomePanel homePanel;
+	
 	//组件
 	StatusBar statusBar;
 	MyMenu myMenu;
@@ -64,6 +70,13 @@ public class MainFrame extends Frame {
 				//按键菜单
 				Panel menu = new MyMenu(this);
 				this.add(menu, BorderLayout.NORTH);
+				
+				//页面
+				homePanel = new HomePanel(this);
+				this.add(homePanel,BorderLayout.CENTER);
+				
+				
+				
 
 	}
 	
@@ -135,7 +148,7 @@ public class MainFrame extends Frame {
 		void init()
 		{
 			//布局
-			this.setLayout(new FlowLayout(FlowLayout.LEFT));
+			this.setLayout(new FlowLayout(FlowLayout.LEFT,0,0));
 			this.setBackground(Color.LIGHT_GRAY);
 			
 			//菜单按键
