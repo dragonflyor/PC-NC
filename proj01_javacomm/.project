@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>proj01_javacomm</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.jdt.core.javabuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.jdt.core.javanature</nature>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>putInLib</name>
+			<type>2</type>
+			<location>D:/STM32F4文件/01_资料文件/03_代码库/javax.comm包/javax.comm包/javaSerial/putInLib</location>
+		</link>
+	</linkedResources>
+</projectDescription>
