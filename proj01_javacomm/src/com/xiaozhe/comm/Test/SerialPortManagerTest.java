@@ -13,23 +13,30 @@ public class SerialPortManagerTest {
 	
 	static SerialPortManager manager = new SerialPortManager("COM5");
 	private static SerialPortSimpleWrite simpleWrite;
+	private static SerialPortSimpleRead simpleRead;
 	
 	public static void main(String[] agrs){
 		
-		simpleWrite = manager.getPortSimpleWriteInstance();
+		//simpleWrite = manager.getPortSimpleWriteInstance();
+		//simpleRead = manager.getPortSimpleReadInstance();
 		
 		getPortsList();
 		
 		//write();
+		if(getPortsList().isEmpty()){
+			System.out.println("没有可识别com");
+		}else{
+			read();
+			
+			writeFileToSTM32F4();
+		}
 		
-		read();
-		
-		writeFileToSTM32F4();
+
 		
 	} 
 	
 	//获取系统可以识别的串口
-	public static void getPortsList(){
+	public static ArrayList getPortsList(){
 		ArrayList list = SerialPortManager.getAvailablePorts();
 		Iterator iterator = list.iterator();
 		System.out.println("可识别的COM号：");
@@ -38,12 +45,14 @@ public class SerialPortManagerTest {
 			String port = (String)iterator.next();
 			System.out.println(port);
 		}
+		
+		return list;
 	} 
 	
 	//发送数据
 	public static void write(){
 		System.out.println("写数据");
-		
+		simpleWrite = manager.getPortSimpleWriteInstance();
 		
 		int  i=10;
 		while(i-->0){
@@ -58,7 +67,7 @@ public class SerialPortManagerTest {
 	//接收数据测试
 	public static void read(){
 		System.out.println("读数据");
-		SerialPortSimpleRead simpleRead = manager.getPortSimpleReadInstance();
+		simpleWrite = manager.getPortSimpleWriteInstance();
 	}
 	
 	//发送文件给单片机的测试
