@@ -1,4 +1,5 @@
 package com.xiaozhe.comm;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 
@@ -78,17 +79,7 @@ import javax.comm.UnsupportedCommOperationException;
 	public SerialPortSimpleRead getPortSimpleReadInstance() {
 		if(portSimpleRead==null && serialPort!= null){
 			//开启一个接收线程
-			portSimpleRead = new SerialPortSimpleRead(serialPort,this) {
-				
-				//串口收到消息的响应函数
-				public void serialEvent(SerialPortEvent event) {
-					// TODO Auto-generated method stub
-					super.serialEvent(event);
-					//这里添加要处理的代码
-					System.out.println("SerialPortManager接收数据响应");
-				}
-				
-			};
+			portSimpleRead = new SerialPortSimpleRead(serialPort,this);
 			//portSimpleRead = new SerialPortSimpleRead(serialPort);
 			return portSimpleRead;
 		}
@@ -197,8 +188,10 @@ import javax.comm.UnsupportedCommOperationException;
 	}
 	/**
 	 * 处理串口读到数据后怎么处理
+	 * @param event
+	 * @see SerialPortSimpleRead 
 	 */
-	public abstract void dealRead();
+	public abstract void serialEvent(SerialPortEvent event);
 	
 
 }

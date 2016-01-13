@@ -113,7 +113,11 @@ public class SerialPortSimpleRead implements Runnable, SerialPortEventListener {
             } catch (IOException e) {}
             break;
         }
+        
+        serialPortManager.serialEvent(event);
     }
+    
+   
     
    
 }

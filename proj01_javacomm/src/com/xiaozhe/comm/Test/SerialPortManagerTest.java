@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import javax.comm.SerialPort;
+import javax.comm.SerialPortEvent;
 
 import com.xiaozhe.comm.SerialPortManager;
 import com.xiaozhe.comm.SerialPortSimpleRead;
@@ -15,10 +16,11 @@ public class SerialPortManagerTest {
 	
 	static SerialPortManager manager = new SerialPortManager("COM5",115200,
 			SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE) {
-		
-		public void dealRead() {
+		//响应串口接收读数据
+		public void serialEvent(SerialPortEvent event) {
 			// TODO Auto-generated method stub
-			
+			//应用程序，监听到数据读入
+			System.out.println("应用程序，监听到数据读入");
 		}
 	};
 	private static SerialPortSimpleWrite simpleWrite;
