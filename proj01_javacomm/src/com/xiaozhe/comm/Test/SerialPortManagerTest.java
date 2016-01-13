@@ -14,6 +14,9 @@ import com.xiaozhe.comm.SerialPortSimpleWrite;
 
 public class SerialPortManagerTest {
 	
+	private static SerialPortSimpleWrite simpleWrite;
+	private static SerialPortSimpleRead simpleRead;
+	
 	static SerialPortManager manager = new SerialPortManager("COM5",115200,
 			SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE) {
 		//响应串口接收读数据
@@ -24,8 +27,7 @@ public class SerialPortManagerTest {
 			read();
 		}
 	};
-	private static SerialPortSimpleWrite simpleWrite;
-	private static SerialPortSimpleRead simpleRead;
+
 	
 	public static void main(String[] agrs){
 		
@@ -48,7 +50,7 @@ public class SerialPortManagerTest {
 			//断开后设置 再次连接
 			changePara();
 		}
-		
+//		
 		//关闭串口
 		manager.close();
 				

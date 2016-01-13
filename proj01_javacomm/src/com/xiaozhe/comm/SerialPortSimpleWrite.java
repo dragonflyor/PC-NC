@@ -101,7 +101,7 @@ public void writeStringToSTM32(String datastr,int loopdelay){
 		//下位机串口接收的字符串必须以"\r\n"结尾
 		datastr=datastr+"\r\n";
 		//发送
-		System.out.println("writeStringToSTM32获取串口输出流:"+outputStream);
+		//System.out.println("writeStringToSTM32获取串口输出流:"+outputStream);
 		outputStream.write(datastr.getBytes());
 		//延时
 		Thread.sleep(loopdelay);
@@ -117,28 +117,35 @@ public void writeStringToSTM32(String datastr,int loopdelay){
  */
 public void writeFileToSTM32(final File file , final int loopdelay){
 			
-		try {
-			FileReader fr = new FileReader(file);
-			BufferedReader br = new BufferedReader(fr);
-			
-			String line = null;
-			while((line = br.readLine())!=null){
-				System.out.println("发送："+line);
-				//发送一行
-				writeStringToSTM32(line,loopdelay);
-			}
-			//发送结束标志"$$"
-			SerialPortSimpleWrite.this.writeString("$$sendover");
-			//延时
-			Thread.sleep(loopdelay);
-			
-			br.close();
-			
-		} catch (Exception e) {
-			
-			e.printStackTrace();
-		}
+		Thread sendfileThread = new Thread(){
+			public void run() {
+				try {
+					FileReader fr = new FileReader(file);
+					BufferedReader br = new BufferedReader(fr);
+					
+					String line = null;
+					while((line = br.readLine())!=null){
+						System.out.println("发送："+line);
+						//发送一行
+						writeStringToSTM32(line,loopdelay);
+					}
+					//发送结束标志"$$"
+					SerialPortSimpleWrite.this.writeString("$$sendover");
+					//延时
+					Thread.sleep(loopdelay);
+					
+					br.close();
+					
+				} catch (Exception e) {
+					
+					e.printStackTrace();
+				}
 
+			}
+		};
+		
+		sendfileThread.start();
+		
 }
 
 

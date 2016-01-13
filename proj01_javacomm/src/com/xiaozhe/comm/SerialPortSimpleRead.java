@@ -91,29 +91,29 @@ public class SerialPortSimpleRead implements Runnable, SerialPortEventListener {
     }
 
     public void serialEvent(SerialPortEvent event) {
-        switch(event.getEventType()) {
-        case SerialPortEvent.BI:
-        case SerialPortEvent.OE:
-        case SerialPortEvent.FE:
-        case SerialPortEvent.PE:
-        case SerialPortEvent.CD:
-        case SerialPortEvent.CTS:
-        case SerialPortEvent.DSR:
-        case SerialPortEvent.RI:
-        case SerialPortEvent.OUTPUT_BUFFER_EMPTY:
-            break;
-        case SerialPortEvent.DATA_AVAILABLE:
-            byte[] readBuffer = new byte[1024];
-
-            try {
-                while (inputStream.available() > 0) {
-                    int numBytes = inputStream.read(readBuffer);
-                }
-                System.out.print(new String(readBuffer));
-            } catch (IOException e) {}
-            break;
-        }
-        
+//        switch(event.getEventType()) {
+//        case SerialPortEvent.BI:
+//        case SerialPortEvent.OE:
+//        case SerialPortEvent.FE:
+//        case SerialPortEvent.PE:
+//        case SerialPortEvent.CD:
+//        case SerialPortEvent.CTS:
+//        case SerialPortEvent.DSR:
+//        case SerialPortEvent.RI:
+//        case SerialPortEvent.OUTPUT_BUFFER_EMPTY:
+//            break;
+//        case SerialPortEvent.DATA_AVAILABLE:
+//            byte[] readBuffer = new byte[1024];
+//
+//            try {
+//                while (inputStream.available() > 0) {
+//                    int numBytes = inputStream.read(readBuffer);
+//                }
+//                System.out.print(new String(readBuffer));
+//            } catch (IOException e) {}
+//            break;
+//        }
+//        
         serialPortManager.serialEvent(event);
     }
     
