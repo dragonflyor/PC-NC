@@ -14,8 +14,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 
+import javax.comm.SerialPort;
+import javax.comm.SerialPortEvent;
+
+import com.xiaozhe.comm.SerialPortManager;
+import com.xiaozhe.comm.SerialPortSimpleRead;
+import com.xiaozhe.comm.SerialPortSimpleWrite;
 import com.xiaozhe.ncassistant.panels.HomePanel;
+import com.xiaozhe.ncassistant.uicomponont.HomePanelUICompnonts;
 
 public class MainFrame extends Frame {
 
@@ -24,11 +32,17 @@ public class MainFrame extends Frame {
 	static int FRAME_HEIGHT = 500;
 	
 	//页面
-	static HomePanel homePanel;
+	static public  HomePanel homePanel;
 	
 	//组件
 	StatusBar statusBar;
 	MyMenu myMenu;
+	
+	//串口
+	public SerialPortSimpleWrite simpleWrite;
+	public SerialPortSimpleRead simpleRead;
+	static SerialPortManager manager;
+	
 	//构造
 	public MainFrame(String title) throws HeadlessException {
 		super(title);
@@ -42,6 +56,10 @@ public class MainFrame extends Frame {
 		//可见
 		this.setVisible(true);
 	}
+	
+	
+
+
 	
 	/**
 	 * 初始化 
@@ -76,8 +94,60 @@ public class MainFrame extends Frame {
 				this.add(homePanel,BorderLayout.CENTER);
 				
 				
+				//串口
+				manager = new SerialPortManager("COM5",115200,
+						SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE) {
+					//响应串口接收读数据
+					public void serialEvent(SerialPortEvent event) {
+						//应用程序，监听到数据读入
+						System.out.println("应用程序，监听到数据读入");
+						//收到数据
+						MainFrame.this.onComRead(event);
+					}
+				};
 				
+				//获取实例
+				simpleWrite = manager.getPortSimpleWriteInstance();
+				simpleRead = manager.getPortSimpleReadInstance();
 
+	}
+	
+	/**
+	 * 串口接收数据时响应
+	 * @param event
+	 */
+	public void onComRead(SerialPortEvent event){
+        switch(event.getEventType()) {
+        case SerialPortEvent.BI:
+        case SerialPortEvent.OE:
+        case SerialPortEvent.FE:
+        case SerialPortEvent.PE:
+        case SerialPortEvent.CD:
+        case SerialPortEvent.CTS:
+        case SerialPortEvent.DSR:
+        case SerialPortEvent.RI:
+        case SerialPortEvent.OUTPUT_BUFFER_EMPTY:
+        	System.out.println("串口错误状态号是："+event.getEventType());
+            break;
+        case SerialPortEvent.DATA_AVAILABLE:
+            byte[] readBuffer = new byte[1024];
+
+            try {
+                while (simpleRead.inputStream.available() > 0) {
+                    int numBytes = simpleRead.inputStream.read(readBuffer);
+                }
+                String msg = new String(readBuffer);
+                System.out.print(msg);
+                
+                //显示到控件
+                HomePanelUICompnonts.receiveTextArea.setText(HomePanelUICompnonts.receiveTextArea.getText()+msg);
+                //刷新
+                HomePanelUICompnonts.receiveTextArea.invalidate();
+                
+            } catch (IOException e) {}
+            break;
+        }
+        
 	}
 	
 	/**
@@ -92,12 +162,13 @@ public class MainFrame extends Frame {
 				super.windowClosing(e);
 				//关闭程序
 				System.exit(0);
+				manager.close();
 			}
 			
 		});
 		
-		
 	}
+
 	
 	/**
 	 * 设置菜单
@@ -224,7 +295,23 @@ public class MainFrame extends Frame {
 				}else if(bt == bt4_OtherPanel){
 					System.out.println("其他");
 					//单出其他选项的菜单	
-					popupmenu.show((Component) popupmenu.getParent(),0, bt.getY()+bt.getHeight()); 
+					popupmenu.show((Component) popupmenu.getParent(),0, bt.getY()+bt.getHeight());
+					
+//					String text ="";
+//	                int i=5;
+//	                while(i--!=0){
+//	                	text = HomePanelUICompnonts.receiveTextArea.getText()+i;
+//	                	  HomePanelUICompnonts.receiveTextArea.setText(text+i);
+//	                      //刷新
+//	                      HomePanelUICompnonts.receiveTextArea.invalidate();
+//	                      try {
+//							Thread.sleep(2000);
+//						} catch (InterruptedException e1) {
+//							// TODO Auto-generated catch block
+//							e1.printStackTrace();
+//						}
+//	                }
+	                
 				}else{
 					
 				}

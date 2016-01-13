@@ -1,14 +1,12 @@
 package com.xiaozhe.ncassistant.panels;
 
 import java.awt.Button;
-import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.FileDialog;
 import java.awt.Font;
 import java.awt.Frame;
-import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -17,7 +15,6 @@ import java.awt.Panel;
 import java.awt.TextArea;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -26,9 +23,12 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 
+import com.xiaozhe.ncassistant.MainFrame;
+import com.xiaozhe.ncassistant.uicomponont.HomePanelUICompnonts;
+
 public class HomePanel extends Panel {
 
-	File file;
+	File file_open;
 	Frame f;
 	public HomePanel( Frame f) {
 		super();
@@ -160,6 +160,7 @@ public class HomePanel extends Panel {
 			
 			bt_openFile.addActionListener(new MYBtnListener());
 			bt_saveFile.addActionListener(new MYBtnListener());
+			bt_send.addActionListener(new MYBtnListener());
 		}
 		
 		/**
@@ -173,16 +174,19 @@ public class HomePanel extends Panel {
 				Button bt = (Button) e.getSource();
 				if(bt == bt_send){
 					//建立新线程处理发送
+					MainFrame mf = (MainFrame) HomePanel.this.f;
+					System.out.println("发送文本内容");
+					mf.simpleWrite.writeFileToSTM32(file_open, 1000);
 				}else if(bt == bt_openFile){
 					//打开文件对话框
 					FileDialog d1 = new FileDialog(f, "选择需要打开文件" , FileDialog.LOAD);
 					d1.setVisible(true);
-					file = new File(d1.getDirectory()+d1.getFile());
-					System.out.println(file);
-					if(file != null){
+					file_open = new File(d1.getDirectory()+d1.getFile());
+					System.out.println(file_open);
+					if(file_open != null){
 						//读取文件显示到文本框
 						try {
-							FileReader fr = new FileReader(file);
+							FileReader fr = new FileReader(file_open);
 							BufferedReader br = new BufferedReader(fr);
 							
 							ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -213,15 +217,13 @@ public class HomePanel extends Panel {
 					//保存文件对话框
 					FileDialog d1 = new FileDialog(f, "保存文件" , FileDialog.SAVE);
 					d1.setVisible(true);
-					file = new File(d1.getDirectory()+d1.getFile());
+					File file = new File(d1.getDirectory()+d1.getFile());
 					if(file != null){
 						//获取本内容
 						ByteArrayInputStream bis = new ByteArrayInputStream(textArea.getText().getBytes());
 						System.out.println(textArea.getText());
 						
 						try {
-							//创建文件
-							File file = new File(d1.getDirectory()+d1.getFile());
 							FileOutputStream fos = new FileOutputStream(file);
 							
 							//保存
@@ -254,8 +256,6 @@ public class HomePanel extends Panel {
 		Button bt_send;
 		Button bt_openFile;
 		Button bt_saveFile;
-		
-		TextArea textArea;
 		
 		private GridBagLayout layout;
 		private GridBagConstraints c;
@@ -302,13 +302,6 @@ public class HomePanel extends Panel {
 			layout = new GridBagLayout();
 			this.setLayout(layout);
 			this.setBackground(Color.WHITE);
-			
-			
-			
-			//文本框 ,20行20字符宽度
-			textArea = new TextArea();
-			textArea.setRows(1);
-
 			
 			//按照布局添加
 			layout = new GridBagLayout();
@@ -447,7 +440,7 @@ public class HomePanel extends Panel {
 			
 			c.weightx=1;
 			c.weighty=20;
-			this.addComponent(textArea,layout,c);
+			this.addComponent(HomePanelUICompnonts.receiveTextArea,layout,c);
 			
 
 			
@@ -483,42 +476,6 @@ public class HomePanel extends Panel {
 }
 
 
-/**
- * 桌面上控件
- * @author zhe
- *
- */
-class HomePanelUICompnonts{
-	static Label label_X;
-	static Label label_Y;
-	static Label label_Z;
-
-	static Label label_T;
-	static Label label_F;
-	static Label label_S;
-	
-	static Label label_currentGcode;
-	
-	static Button bt_saveImage;
-	
-	static {
-		label_X =new Label("0");
-		label_Y =new Label("0");
-		label_Z =new Label("0");
-		
-		label_T =new Label("0");
-		label_F =new Label("0");
-		label_S =new Label("0");
-
-		label_currentGcode = new Label("正在运行 :NOT RUNNING", Label.LEFT);
-		label_currentGcode.setFont(new Font("楷体", Font.BOLD, 15));
-		
-
-		
-		
-	}
-	
-}
 
 
 ///**

@@ -3,6 +3,7 @@ package com.xiaozhe.ncassistant.uicomponont;
 import java.awt.Button;
 import java.awt.Font;
 import java.awt.Label;
+import java.awt.TextArea;
 
 
 /**
@@ -23,6 +24,8 @@ public class HomePanelUICompnonts{
 	
 	public static Button bt_saveImage;
 	
+	public static  TextArea receiveTextArea;
+	
 	static {
 		label_X =new Label("0");
 		label_Y =new Label("0");
@@ -35,6 +38,11 @@ public class HomePanelUICompnonts{
 		label_currentGcode = new Label("正在运行 :NOT RUNNING", Label.LEFT);
 		label_currentGcode.setFont(new Font("楷体", Font.BOLD, 15));
 
+		
+		//文本框 ,20行20字符宽度
+		receiveTextArea = new TextArea();
+		receiveTextArea.setRows(1);
+		receiveTextArea.setText("");
 	}
 	
 }
