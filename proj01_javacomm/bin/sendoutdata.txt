@@ -1,0 +1,16 @@
+	//发送文件给单片机的测试
+	public static void writeFileToSTM32(){
+		System.out.println("给单片机发文件测试");
+		System.out.println(System.getProperties().toString());
+		//获取文件路径,获取失败则从桌面创建
+		String filepath = System.getProperties().getProperty("java.class.path", "C:/Users/zhe/Desktop");
+		System.out.println("文件路径"+filepath);
+		//创建文件
+		File file = new File(filepath,"/sendoutdata.txt");
+		try {
+			file.createNewFile();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}

@@ -39,9 +39,14 @@ import java.io.OutputStream;
 
 import javax.comm.SerialPort;
 
+import sun.rmi.runtime.Log;
+
 public class SerialPortSimpleWrite {
     SerialPort serialPort;
      OutputStream outputStream;
+
+
+    
 /**
  * 创建串口写数据对象
  * @param serialPort 窗口号字符串，如："COM5"
@@ -52,15 +57,17 @@ public SerialPortSimpleWrite(SerialPort serialPort) {
 	try {
 		this.outputStream = serialPort.getOutputStream();
 	} catch (IOException e) {
-		e.printStackTrace();
+		//e.printStackTrace();
+		
 	}
 }
+
 
 public void write(int ch){
 	try {
 		outputStream.write(ch);
 	} catch (IOException e) {
-		e.printStackTrace();
+		//e.printStackTrace();
 	}
 }
 /**
@@ -89,7 +96,7 @@ public void writeStringToSTM32(String datastr,int loopdelay){
 		//发送
 		outputStream.write(datastr.getBytes());
 		//延时
-		Thread.currentThread().sleep(loopdelay);
+		Thread.sleep(loopdelay);
 	} catch (Exception e) {
 		e.printStackTrace();
 	}
@@ -114,7 +121,7 @@ public void writeFileToSTM32(File file , int loopdelay){
 		//发送结束标志"$$"
 		this.writeString("$$sendover");
 		//延时
-		Thread.currentThread().sleep(loopdelay);
+		Thread.sleep(loopdelay);
 		
 		br.close();
 		

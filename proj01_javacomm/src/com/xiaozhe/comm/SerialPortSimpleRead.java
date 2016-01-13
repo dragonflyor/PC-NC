@@ -48,14 +48,24 @@ public class SerialPortSimpleRead implements Runnable, SerialPortEventListener {
     SerialPort serialPort;
     Thread readThread;
     
+    //回传对象
+    SerialPortManager serialPortManager;
+    
+    //串口参数
+    int bautrate;
+    int SerialPort_DATABIT;
+    int SerialPort_STOPBIT;
+    int SerialPort_PARITY;
    /**
     * 创建读取串口对象
     * @param serialPort 端口号的字符串，如:"COM5"
+    * @param manager 传入管理器
     */
-    public SerialPortSimpleRead(SerialPort serialPort) {
+    public SerialPortSimpleRead(SerialPort serialPort,SerialPortManager serialPortManager) {
     	
     	 System.out.println("创建接收对象");
 		this.serialPort = serialPort;
+		this.serialPortManager = serialPortManager;
         try {
             inputStream = serialPort.getInputStream();
         } catch (IOException e) {}
@@ -63,12 +73,12 @@ public class SerialPortSimpleRead implements Runnable, SerialPortEventListener {
             serialPort.addEventListener(this);
 	} catch (TooManyListenersException e) {}
         serialPort.notifyOnDataAvailable(true);
-        try {
-            serialPort.setSerialPortParams(115200,
-                SerialPort.DATABITS_8,
-                SerialPort.STOPBITS_1,
-                SerialPort.PARITY_NONE);
-        } catch (UnsupportedCommOperationException e) {}
+//        try {
+//            serialPort.setSerialPortParams(115200,
+//                SerialPort.DATABITS_8,
+//                SerialPort.STOPBITS_1,
+//                SerialPort.PARITY_NONE);
+//        } catch (UnsupportedCommOperationException e) {}
         readThread = new Thread(this);
         readThread.start();
     }
@@ -104,4 +114,6 @@ public class SerialPortSimpleRead implements Runnable, SerialPortEventListener {
             break;
         }
     }
+    
+   
 }

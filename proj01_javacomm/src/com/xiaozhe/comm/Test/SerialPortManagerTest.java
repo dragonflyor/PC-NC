@@ -5,34 +5,42 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import javax.comm.SerialPort;
+
 import com.xiaozhe.comm.SerialPortManager;
 import com.xiaozhe.comm.SerialPortSimpleRead;
 import com.xiaozhe.comm.SerialPortSimpleWrite;
 
 public class SerialPortManagerTest {
 	
-	static SerialPortManager manager = new SerialPortManager("COM5");
+	static SerialPortManager manager = new SerialPortManager("COM5",115200,
+			SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE) {
+		
+		public void dealRead() {
+			// TODO Auto-generated method stub
+			
+		}
+	};
 	private static SerialPortSimpleWrite simpleWrite;
 	private static SerialPortSimpleRead simpleRead;
 	
 	public static void main(String[] agrs){
 		
-		//simpleWrite = manager.getPortSimpleWriteInstance();
-		//simpleRead = manager.getPortSimpleReadInstance();
+		simpleWrite = manager.getPortSimpleWriteInstance();
+		simpleRead = manager.getPortSimpleReadInstance();
 		
 		getPortsList();
 		
-		//write();
+		
 		if(getPortsList().isEmpty()){
 			System.out.println("没有可识别com");
 		}else{
+			//write();
 			read();
 			
 			writeFileToSTM32F4();
 		}
-		
-
-		
+				
 	} 
 	
 	//获取系统可以识别的串口
@@ -52,9 +60,10 @@ public class SerialPortManagerTest {
 	//发送数据
 	public static void write(){
 		System.out.println("写数据");
-		simpleWrite = manager.getPortSimpleWriteInstance();
-		
+		//simpleWrite = manager.getPortSimpleWriteInstance();
+		System.out.println("simpleWrite:"+simpleWrite);
 		int  i=10;
+		
 		while(i-->0){
 			simpleWrite.writeStringToSTM32("##123123--", 1000);
 			simpleWrite.writeStringToSTM32("##123123aa--",1000);
@@ -67,7 +76,8 @@ public class SerialPortManagerTest {
 	//接收数据测试
 	public static void read(){
 		System.out.println("读数据");
-		simpleWrite = manager.getPortSimpleWriteInstance();
+		//simpleWrite = manager.getPortSimpleWriteInstance();
+		
 	}
 	
 	//发送文件给单片机的测试

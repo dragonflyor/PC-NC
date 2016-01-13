@@ -14,7 +14,7 @@ import javax.comm.UnsupportedCommOperationException;
  * @author zhe
  *
  */
- public class SerialPortManager {
+ public abstract class SerialPortManager {
 	//定义串口收发变量
 	private SerialPortSimpleRead portSimpleRead;
 	private SerialPortSimpleWrite portSimpleWrite;
@@ -22,12 +22,55 @@ import javax.comm.UnsupportedCommOperationException;
 	static Enumeration portList;
 	static CommPortIdentifier portId;
 	static SerialPort serialPort;
+	
+	//通讯参数 默认值如下
+    int bautrate = 115200;
+    int serialPort_DATABIT = SerialPort.DATABITS_8;
+    int serialPort_STOPBIT = SerialPort.STOPBITS_1;
+    int serialPort_PARITY = SerialPort.PARITY_NONE;
 
 
 	static{
 		//获取系统COM列表
 		 portList = CommPortIdentifier.getPortIdentifiers();
 	}
+	
+	/**
+	 * 用指定参数构造
+	 * @param comPort
+	 * @param bautrate
+	 * @param serialPort_DATABIT
+	 * @param serialPort_STOPBIT
+	 * @param serialPort_PARITY
+	 */
+	public SerialPortManager(String comPort,int bautrate, int serialPort_DATABIT,
+			int serialPort_STOPBIT, int serialPort_PARITY) {
+		super();
+		
+//		   serialPort.setSerialPortParams(115200,
+//                   SerialPort.DATABITS_8,
+//                   SerialPort.STOPBITS_1,
+//                   SerialPort.PARITY_NONE);
+		
+		this.bautrate = bautrate;
+		this.serialPort_DATABIT = serialPort_DATABIT;
+		this.serialPort_STOPBIT = serialPort_STOPBIT;
+		this.serialPort_PARITY = serialPort_PARITY;
+		SerialPortManager.serialPort = openPort(comPort);
+	}
+	
+	/**
+	 * 默认参数构造
+	 * @param comPort
+	 */
+	 public SerialPortManager(String comPort) {
+		super();
+//		//获取系统的所有可用端口的集合
+//        portList = CommPortIdentifier.getPortIdentifiers();
+		//设置要管理的端口,打开串口
+		SerialPortManager.serialPort = openPort(comPort);
+	}
+	
 	/**
 	 * 获取单实例串口读对象
 	 * @return 获取成功返回串口读独对象 ;获取失败返回null
@@ -35,14 +78,14 @@ import javax.comm.UnsupportedCommOperationException;
 	public SerialPortSimpleRead getPortSimpleReadInstance() {
 		if(portSimpleRead==null && serialPort!= null){
 			//开启一个接收线程
-			portSimpleRead = new SerialPortSimpleRead(serialPort) {
+			portSimpleRead = new SerialPortSimpleRead(serialPort,this) {
 				
 				//串口收到消息的响应函数
 				public void serialEvent(SerialPortEvent event) {
 					// TODO Auto-generated method stub
 					super.serialEvent(event);
 					//这里添加要处理的代码
-					//System.out.println("SerialPortManager接收数据响应");
+					System.out.println("SerialPortManager接收数据响应");
 				}
 				
 			};
@@ -58,6 +101,7 @@ import javax.comm.UnsupportedCommOperationException;
 			portSimpleWrite = new SerialPortSimpleWrite(serialPort);
 			return portSimpleWrite;
 		}
+		//System.out.println("getPortSimpleWriteInstance():"+getPortSimpleWriteInstance());
 		return null;
 	}
 
@@ -84,20 +128,22 @@ import javax.comm.UnsupportedCommOperationException;
 		return portstrList;
 	}
 	
-	public SerialPortManager(String comPort) {
-		super();
-//		//获取系统的所有可用端口的集合
-//        portList = CommPortIdentifier.getPortIdentifiers();
-		//设置要管理的端口
-		setPort(comPort);
-	}
+
 
 	/**
-	 * 设置串口通讯的端口号，调用前必须执行 portList =CommPortIdentifier.getPortIdentifiers()获取所有端口
+	 * 打开串口
 	 * @param comPort 端口号字符串 ，如:"COM5"
+	 * @return 返回打开的串口
 	 */
-	private void setPort(String comPort){
+	private SerialPort openPort(String comPort){
+		//重新获取系统COM列表
+		portList = CommPortIdentifier.getPortIdentifiers();
+		if(portList.hasMoreElements()!=true){
+			System.out.println("打开端口失败，检测不到Com");
+			return null;
+		}
 		
+		SerialPort serialPort = null;
 		  //遍历集合
         while (portList.hasMoreElements()) {
             portId = (CommPortIdentifier) portList.nextElement();
@@ -110,10 +156,10 @@ import javax.comm.UnsupportedCommOperationException;
 							serialPort = (SerialPort)
 							    portId.open("SerialPortManager", 2000);
 							
-							   serialPort.setSerialPortParams(115200,
-			                            SerialPort.DATABITS_8,
-			                            SerialPort.STOPBITS_1,
-			                            SerialPort.PARITY_NONE);
+							   serialPort.setSerialPortParams(this.bautrate,
+			                            this.serialPort_DATABIT,
+			                            this.serialPort_STOPBIT,
+			                           this.serialPort_PARITY);
 							   
 						} catch (PortInUseException e) {
 							System.out.println("端口被占用");
@@ -124,7 +170,35 @@ import javax.comm.UnsupportedCommOperationException;
             }
 
         }
+		return serialPort;
 	}
+	
+	/**
+	 * 设置串口参数
+	 * @param bautrate
+	 * @param serialPort_DATABIT
+	 * @param serialPort_STOPBIT
+	 * @param serialPort_PARITY
+	 */
+	void setCommPrams(    int bautrate,
+    int serialPort_DATABIT,
+    int serialPort_STOPBIT,
+    int serialPort_PARITY){
+		this.bautrate = bautrate;
+		this.serialPort_DATABIT = serialPort_DATABIT;
+		this.serialPort_STOPBIT = serialPort_STOPBIT;
+		this.serialPort_PARITY = serialPort_PARITY;
+		
+	}
+	
+	
+	public void close(){
+		this.serialPort.close();
+	}
+	/**
+	 * 处理串口读到数据后怎么处理
+	 */
+	public abstract void dealRead();
 	
 
 }

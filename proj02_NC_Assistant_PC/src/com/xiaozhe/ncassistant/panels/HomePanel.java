@@ -168,10 +168,9 @@ public class HomePanel extends Panel {
 		 *
 		 */
 		class MYBtnListener implements ActionListener{
-
+		
 			public void actionPerformed(ActionEvent e) {
 				Button bt = (Button) e.getSource();
-				
 				if(bt == bt_send){
 					//建立新线程处理发送
 				}else if(bt == bt_openFile){
