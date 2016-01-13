@@ -46,7 +46,7 @@ public class SerialPortSimpleRead implements Runnable, SerialPortEventListener {
 
     InputStream inputStream;
     SerialPort serialPort;
-    Thread readThread;
+    public Thread readThread;
     
     //回传对象
     SerialPortManager serialPortManager;
@@ -117,7 +117,28 @@ public class SerialPortSimpleRead implements Runnable, SerialPortEventListener {
         serialPortManager.serialEvent(event);
     }
     
-   
-    
+   /**
+    * 释放掉资源
+    */
+    public void close(){
+      
+        if(readThread!=null){
+        	readThread.interrupt();;
+        	readThread = null;
+        }
+        if(serialPort!=null){
+        	serialPort.close();
+        	serialPort=null;
+        }
+        if(inputStream!=null){
+        	try {
+				inputStream.close();
+				inputStream = null;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        }
+    }
    
 }

@@ -46,7 +46,7 @@ import javax.comm.UnsupportedCommOperationException;
 	 */
 	public SerialPortManager(String comPort,int bautrate, int serialPort_DATABIT,
 			int serialPort_STOPBIT, int serialPort_PARITY) {
-		super();
+//		super();
 		
 //		   serialPort.setSerialPortParams(115200,
 //                   SerialPort.DATABITS_8,
@@ -88,7 +88,6 @@ import javax.comm.UnsupportedCommOperationException;
 	//获取写对象
 	public SerialPortSimpleWrite getPortSimpleWriteInstance() {
 		if(portSimpleWrite==null && serialPort!= null){
-			//开启一个接收线程
 			portSimpleWrite = new SerialPortSimpleWrite(serialPort);
 			return portSimpleWrite;
 		}
@@ -165,6 +164,38 @@ import javax.comm.UnsupportedCommOperationException;
 	}
 	
 	/**
+	 * 根据新参数再次打开 串口
+	 * @param comPort
+	 * @param bautrate
+	 * @param serialPort_DATABIT
+	 * @param serialPort_STOPBIT
+	 * @param serialPort_PARITY
+	 * @return
+	 */
+	public SerialPort reOpenPort(String comPort, int bautrate, int serialPort_DATABIT,
+			int serialPort_STOPBIT, int serialPort_PARITY){
+		
+		//关闭当前
+		this.close();
+
+		
+		//新参数
+		this.bautrate = bautrate;
+		this.serialPort_DATABIT = serialPort_DATABIT;
+		this.serialPort_STOPBIT = serialPort_STOPBIT;
+		this.serialPort_PARITY = serialPort_PARITY;
+		SerialPortManager.serialPort = openPort(comPort);
+		
+		//再次获取新读写对象
+		
+		//开启一个接收线程
+		portSimpleRead = new SerialPortSimpleRead(serialPort,this);
+		portSimpleWrite = new SerialPortSimpleWrite(serialPort);
+		
+		return serialPort;
+	}
+	
+	/**
 	 * 设置串口参数
 	 * @param bautrate
 	 * @param serialPort_DATABIT
@@ -183,8 +214,22 @@ import javax.comm.UnsupportedCommOperationException;
 	}
 	
 	
+	//关闭串口
 	public void close(){
-		this.serialPort.close();
+		if(SerialPortManager.serialPort!=null){
+			SerialPortManager.serialPort.close();
+		}
+		portSimpleRead.close();
+		portSimpleWrite.close();
+//		try {
+//			//portSimpleWrite.outputStream.close();
+//			portSimpleRead.close();
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			//e.printStackTrace();
+//			System.out.println("关闭串口时出错");
+//		}
+		
 	}
 	/**
 	 * 处理串口读到数据后怎么处理
@@ -193,5 +238,5 @@ import javax.comm.UnsupportedCommOperationException;
 	 */
 	public abstract void serialEvent(SerialPortEvent event);
 	
-
+	
 }

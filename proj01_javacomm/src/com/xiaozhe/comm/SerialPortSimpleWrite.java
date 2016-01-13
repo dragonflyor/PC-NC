@@ -43,7 +43,7 @@ import sun.rmi.runtime.Log;
 
 public class SerialPortSimpleWrite {
     SerialPort serialPort;
-     OutputStream outputStream;
+    public  OutputStream outputStream;
 
 
     
@@ -63,6 +63,10 @@ public SerialPortSimpleWrite(SerialPort serialPort) {
 }
 
 
+/**
+ * 串口输出一个字符
+ * @param ch
+ */
 public void write(int ch){
 	try {
 		outputStream.write(ch);
@@ -107,28 +111,51 @@ public void writeStringToSTM32(String datastr,int loopdelay){
  * @param file 要传送文本文件
  * @param loopdelay 
  */
-public void writeFileToSTM32(File file , int loopdelay){
-	try {
-		FileReader fr = new FileReader(file);
-		BufferedReader br = new BufferedReader(fr);
-		
-		String line = null;
-		while((line = br.readLine())!=null){
-			System.out.println("发送："+line);
-			//发送一行
-			writeStringToSTM32(line,loopdelay);
+public void writeFileToSTM32(final File file , final int loopdelay){
+			
+		try {
+			FileReader fr = new FileReader(file);
+			BufferedReader br = new BufferedReader(fr);
+			
+			String line = null;
+			while((line = br.readLine())!=null){
+				System.out.println("发送："+line);
+				//发送一行
+				writeStringToSTM32(line,loopdelay);
+			}
+			//发送结束标志"$$"
+			SerialPortSimpleWrite.this.writeString("$$sendover");
+			//延时
+			Thread.sleep(loopdelay);
+			
+			br.close();
+			
+		} catch (Exception e) {
+			
+			e.printStackTrace();
 		}
-		//发送结束标志"$$"
-		this.writeString("$$sendover");
-		//延时
-		Thread.sleep(loopdelay);
-		
-		br.close();
-		
-	} catch (Exception e) {
-		
-		e.printStackTrace();
-	}
+
+}
+
+
+/**
+ * 关闭串口资源
+ */
+public void close(){
+    if(outputStream != null){
+    	try {
+			outputStream.close();
+			outputStream = null;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    } 
+
+    if(serialPort != null){
+    	serialPort.close();
+
+    }
 }
 
     

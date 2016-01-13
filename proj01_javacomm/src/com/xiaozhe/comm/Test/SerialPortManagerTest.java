@@ -38,10 +38,15 @@ public class SerialPortManagerTest {
 			System.out.println("没有可识别com");
 		}else{
 			//write();
-			read();
+			//read();
 			
-			writeFileToSTM32F4();
+			//writeFileToSTM32F4();
+			
+			changePara();
 		}
+		
+		//关闭串口
+		manager.close();
 				
 	} 
 	
@@ -70,7 +75,7 @@ public class SerialPortManagerTest {
 			simpleWrite.writeStringToSTM32("##123123--", 1000);
 			simpleWrite.writeStringToSTM32("##123123aa--",1000);
 			//发送结束
-			simpleWrite.writeStringToSTM32("$$",1000);
+			//simpleWrite.writeStringToSTM32("$$",1000);
 		}
 
 	} 
@@ -116,5 +121,21 @@ public class SerialPortManagerTest {
 		
 		
 	}
+	
+	//修改串口参数后再次连接的测试
+	static void changePara(){
+//		simpleWrite.writeStringToSTM32("11111111",1000);
+//		try {
+//			Thread.sleep(1000);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		manager.close();
+		manager.reOpenPort("COM5",9600,
+			SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);
+		simpleWrite.writeStringToSTM32("1111222",1000);
+	}
+	
 
 }
