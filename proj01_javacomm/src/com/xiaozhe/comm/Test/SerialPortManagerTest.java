@@ -18,9 +18,10 @@ public class SerialPortManagerTest {
 			SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE) {
 		//响应串口接收读数据
 		public void serialEvent(SerialPortEvent event) {
-			// TODO Auto-generated method stub
 			//应用程序，监听到数据读入
 			System.out.println("应用程序，监听到数据读入");
+			//读数据测试
+			read();
 		}
 	};
 	private static SerialPortSimpleWrite simpleWrite;
@@ -31,17 +32,20 @@ public class SerialPortManagerTest {
 		simpleWrite = manager.getPortSimpleWriteInstance();
 		simpleRead = manager.getPortSimpleReadInstance();
 		
+		//获取可识别的串口
 		getPortsList();
 		
 		
 		if(getPortsList().isEmpty()){
 			System.out.println("没有可识别com");
 		}else{
+			//一般写测试
 			//write();
-			//read();
 			
+			//向单片机写测试，与下位机轮询时间对应
 			//writeFileToSTM32F4();
 			
+			//断开后设置 再次连接
 			changePara();
 		}
 		
@@ -50,7 +54,10 @@ public class SerialPortManagerTest {
 				
 	} 
 	
-	//获取系统可以识别的串口
+	/**
+	 * 获取系统可以识别的串口
+	 * @return 返回端口的字符串集合
+	 */
 	public static ArrayList getPortsList(){
 		ArrayList list = SerialPortManager.getAvailablePorts();
 		Iterator iterator = list.iterator();
@@ -64,10 +71,11 @@ public class SerialPortManagerTest {
 		return list;
 	} 
 	
-	//发送数据
+	/**
+	 * 发送数据
+	 */
 	public static void write(){
 		System.out.println("写数据");
-		//simpleWrite = manager.getPortSimpleWriteInstance();
 		System.out.println("simpleWrite:"+simpleWrite);
 		int  i=10;
 		
@@ -80,17 +88,19 @@ public class SerialPortManagerTest {
 
 	} 
 	
-	//接收数据测试
+	/**
+	 * 接收数据读取处理 测试，放在监听中
+	 */
 	public static void read(){
 		System.out.println("读数据");
-		//simpleWrite = manager.getPortSimpleWriteInstance();
-		
 	}
 	
-	//发送文件给单片机的测试
+	/**
+	 * 发送文件给单片机的测试
+	 */
 	public static void writeFileToSTM32F4(){
 		//开始发送时间
-//		long startime = System.currentTimeMillis();
+		long startime = System.currentTimeMillis();
 		
 		System.out.println("给单片机发文件测试");
 		//System.out.println(System.getProperties().toString());
@@ -103,38 +113,37 @@ public class SerialPortManagerTest {
 		//第二个参数是下位机串口轮询的周期
 		simpleWrite.writeFileToSTM32(file, 300);
 		
-//		//结束发送时间
-//		long endtime = System.currentTimeMillis();
-//		
-//
-//		//耗费时间
-//		long timecost = endtime - startime;
-//		
-//		//延时
-//		try {
-//			Thread.sleep(5000);
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		System.out.println("文件传输耗费时间为："+timecost+"ms");
-		
-		
+		//结束发送时间
+		long endtime = System.currentTimeMillis();
+
+		//耗费时间
+		long timecost = endtime - startime;
+
+		System.out.println("文件传输耗费时间为："+timecost+"ms");
+
 	}
 	
-	//修改串口参数后再次连接的测试
+	/**
+	 * 修改串口参数后再次连接的测试
+	 */
 	static void changePara(){
-//		simpleWrite.writeStringToSTM32("11111111",1000);
-//		try {
-//			Thread.sleep(1000);
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		manager.close();
-		manager.reOpenPort("COM5",9600,
-			SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);
-		simpleWrite.writeStringToSTM32("1111222",1000);
+		try {
+			simpleWrite.writeStringToSTM32("11111111",1000);
+			Thread.sleep(2000);
+	
+			manager.reOpenPort("COM5",9600,
+				SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);
+			simpleWrite.writeStringToSTM32("1111222",1000);
+			
+			Thread.sleep(2000);
+			manager.reOpenPort("COM5",115200,
+					SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);
+			simpleWrite.writeStringToSTM32("1111333",1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 	
 

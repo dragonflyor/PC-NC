@@ -1,5 +1,4 @@
 package com.xiaozhe.comm;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 
@@ -8,8 +7,6 @@ import javax.comm.PortInUseException;
 import javax.comm.SerialPort;
 import javax.comm.SerialPortEvent;
 import javax.comm.UnsupportedCommOperationException;
-
-import com.sun.org.apache.xalan.internal.xsltc.compiler.sym;
 
 /**
  * 该类是用来管理串口数据收发的类，通过该类的静态方法可以获取系统可识别的端口
@@ -48,12 +45,6 @@ import com.sun.org.apache.xalan.internal.xsltc.compiler.sym;
 	 */
 	public SerialPortManager(String comPort,int bautrate, int serialPort_DATABIT,
 			int serialPort_STOPBIT, int serialPort_PARITY) {
-//		super();
-		
-//		   serialPort.setSerialPortParams(115200,
-//                   SerialPort.DATABITS_8,
-//                   SerialPort.STOPBITS_1,
-//                   SerialPort.PARITY_NONE);
 		
 		this.bautrate = bautrate;
 		this.serialPort_DATABIT = serialPort_DATABIT;
@@ -68,8 +59,6 @@ import com.sun.org.apache.xalan.internal.xsltc.compiler.sym;
 	 */
 	 public SerialPortManager(String comPort) {
 		super();
-//		//获取系统的所有可用端口的集合
-//        portList = CommPortIdentifier.getPortIdentifiers();
 		//设置要管理的端口,打开串口
 		SerialPortManager.serialPort = openPort(comPort);
 	}
@@ -194,7 +183,7 @@ import com.sun.org.apache.xalan.internal.xsltc.compiler.sym;
 		portSimpleRead = new SerialPortSimpleRead(serialPort,this);
 		portSimpleWrite = new SerialPortSimpleWrite(serialPort);
 		
-		System.out.println("portSimpleRead:"+portSimpleRead+"  portSimpleWrite"+portSimpleWrite);
+		System.out.println("串口配置后重新打开----");
 		
 		return serialPort;
 	}
@@ -218,24 +207,17 @@ import com.sun.org.apache.xalan.internal.xsltc.compiler.sym;
 	}
 	
 	
-	//关闭串口
+	/**
+	 * 关闭串口管理的资源
+	 */
 	public void close(){
-		System.out.println("关闭管理");
+		System.out.println("串口管理关闭----");
 		if(SerialPortManager.serialPort!=null){
 			SerialPortManager.serialPort.close();
 			serialPort = null;
 		}
 		portSimpleRead.close();
 		portSimpleWrite.close();
-		System.out.println("关比莞城");
-//		try {
-//			//portSimpleWrite.outputStream.close();
-//			portSimpleRead.close();
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			//e.printStackTrace();
-//			System.out.println("关闭串口时出错");
-//		}
 		
 	}
 	/**

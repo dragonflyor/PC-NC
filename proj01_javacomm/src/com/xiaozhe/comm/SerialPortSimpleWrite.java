@@ -58,8 +58,6 @@ public SerialPortSimpleWrite(SerialPort serialPort) {
 	try {
 		
 		this.outputStream = serialPort.getOutputStream();
-		System.out.println("构造的时候获取串口输出流:"+outputStream);
-		System.out.println("serialPort:"+serialPort+" outputStream:"+outputStream);
 	} catch (IOException e) {
 		e.printStackTrace();
 		
