@@ -9,6 +9,8 @@ import javax.comm.SerialPort;
 import javax.comm.SerialPortEvent;
 import javax.comm.UnsupportedCommOperationException;
 
+import com.sun.org.apache.xalan.internal.xsltc.compiler.sym;
+
 /**
  * 该类是用来管理串口数据收发的类，通过该类的静态方法可以获取系统可识别的端口
  * 使用时如果需要对接收的数据进行处理，处理代码添加在getPortSimpleReadInstance()中的serialEvent(SerialPortEvent event)方法
@@ -192,6 +194,8 @@ import javax.comm.UnsupportedCommOperationException;
 		portSimpleRead = new SerialPortSimpleRead(serialPort,this);
 		portSimpleWrite = new SerialPortSimpleWrite(serialPort);
 		
+		System.out.println("portSimpleRead:"+portSimpleRead+"  portSimpleWrite"+portSimpleWrite);
+		
 		return serialPort;
 	}
 	
@@ -216,11 +220,14 @@ import javax.comm.UnsupportedCommOperationException;
 	
 	//关闭串口
 	public void close(){
+		System.out.println("关闭管理");
 		if(SerialPortManager.serialPort!=null){
 			SerialPortManager.serialPort.close();
+			serialPort = null;
 		}
 		portSimpleRead.close();
 		portSimpleWrite.close();
+		System.out.println("关比莞城");
 //		try {
 //			//portSimpleWrite.outputStream.close();
 //			portSimpleRead.close();

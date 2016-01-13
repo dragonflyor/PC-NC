@@ -43,7 +43,7 @@ import sun.rmi.runtime.Log;
 
 public class SerialPortSimpleWrite {
     SerialPort serialPort;
-    public  OutputStream outputStream;
+    public static OutputStream outputStream;
 
 
     
@@ -52,12 +52,16 @@ public class SerialPortSimpleWrite {
  * @param serialPort 窗口号字符串，如："COM5"
  */
 public SerialPortSimpleWrite(SerialPort serialPort) {
-	super();
+	//super();
 	this.serialPort = serialPort;
+	System.out.println(serialPort);
 	try {
+		
 		this.outputStream = serialPort.getOutputStream();
+		System.out.println("构造的时候获取串口输出流:"+outputStream);
+		System.out.println("serialPort:"+serialPort+" outputStream:"+outputStream);
 	} catch (IOException e) {
-		//e.printStackTrace();
+		e.printStackTrace();
 		
 	}
 }
@@ -81,6 +85,7 @@ public void write(int ch){
 public void writeString(String datastr){
 
 	try {
+		
 		outputStream.write(datastr.getBytes());
 	} catch (IOException e) {
 		e.printStackTrace();
@@ -98,6 +103,7 @@ public void writeStringToSTM32(String datastr,int loopdelay){
 		//下位机串口接收的字符串必须以"\r\n"结尾
 		datastr=datastr+"\r\n";
 		//发送
+		System.out.println("writeStringToSTM32获取串口输出流:"+outputStream);
 		outputStream.write(datastr.getBytes());
 		//延时
 		Thread.sleep(loopdelay);
