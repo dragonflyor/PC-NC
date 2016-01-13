@@ -2,6 +2,7 @@ package com.xiaozhe.ncassistant;
 
 import java.awt.BorderLayout;
 import java.awt.Button;
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
@@ -22,7 +23,10 @@ import javax.comm.SerialPortEvent;
 import com.xiaozhe.comm.SerialPortManager;
 import com.xiaozhe.comm.SerialPortSimpleRead;
 import com.xiaozhe.comm.SerialPortSimpleWrite;
+import com.xiaozhe.ncassistant.panels.DrawwingPanel;
 import com.xiaozhe.ncassistant.panels.HomePanel;
+import com.xiaozhe.ncassistant.panels.InternetPanel;
+import com.xiaozhe.ncassistant.panels.SettingsPanel;
 import com.xiaozhe.ncassistant.uicomponont.HomePanelUICompnonts;
 
 public class MainFrame extends Frame {
@@ -31,8 +35,14 @@ public class MainFrame extends Frame {
 	static int FRAME_WIDTH = 800;
 	static int FRAME_HEIGHT = 500;
 	
-	//页面
+	//卡片页面
+	private static Panel contentPanel;
+	CardLayout cardLayout ;
+	//子页面
 	static public  HomePanel homePanel;
+	static public SettingsPanel settingsPanel;
+	static public DrawwingPanel drawingPanel;
+	static public InternetPanel internetPanel;
 	
 	//组件
 	StatusBar statusBar;
@@ -89,9 +99,9 @@ public class MainFrame extends Frame {
 				Panel menu = new MyMenu(this);
 				this.add(menu, BorderLayout.NORTH);
 				
-				//页面
+				//页面1------------------------------------------
 				homePanel = new HomePanel(this);
-				this.add(homePanel,BorderLayout.CENTER);
+				//this.add(homePanel,BorderLayout.CENTER);
 				
 				
 				//串口
@@ -109,6 +119,29 @@ public class MainFrame extends Frame {
 				//获取实例
 				simpleWrite = manager.getPortSimpleWriteInstance();
 				simpleRead = manager.getPortSimpleReadInstance();
+				
+				//页面2------------------------------------------
+				settingsPanel = new SettingsPanel();
+				
+				//页面3
+				drawingPanel =new DrawwingPanel();
+				
+				//页面4
+				internetPanel = new InternetPanel();
+				
+				//----------------子页面添加到到卡片页-------------
+				contentPanel = new Panel();
+				cardLayout = new CardLayout(0, 0);
+				contentPanel.setLayout(cardLayout);
+				//添加卡片子页
+				contentPanel.add(homePanel, "1");
+				contentPanel.add(settingsPanel, "2");
+				contentPanel.add(drawingPanel, "3");
+				contentPanel.add(internetPanel, "4");
+				
+				//添加到框架
+				this.add(contentPanel,BorderLayout.CENTER);
+				
 
 	}
 	
@@ -283,15 +316,19 @@ public class MainFrame extends Frame {
 				if(bt==bt0_HomePanel){
 					System.out.println("主控界面");
 					//显示第一个界面	
+					cardLayout.show(contentPanel, "1");
 				}else if(bt == bt1_SettingPanel){
 					System.out.println("设置界面");
 					//显示设置界面	
+					cardLayout.show(contentPanel, "2");
 				}else if(bt == bt2_DrawwingPanel){
 					System.out.println("绘图界面");
 					//显示绘图界面	
+					cardLayout.show(contentPanel, "3");
 				}else if(bt == bt3_InternetPanel){
 					System.out.println("网络界面");
-					//显示网络界面	
+					//显示网络界面
+					cardLayout.show(contentPanel, "4");
 				}else if(bt == bt4_OtherPanel){
 					System.out.println("其他");
 					//单出其他选项的菜单	

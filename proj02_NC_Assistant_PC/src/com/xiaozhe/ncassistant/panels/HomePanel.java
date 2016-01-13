@@ -92,7 +92,7 @@ public class HomePanel extends Panel {
 			layout = new GridBagLayout();
 			this.setLayout(layout);
 			//
-			this.setBackground(Color.cyan);
+			this.setBackground(Color.GRAY);
 			
 			//文件选择 与发送按钮
 			Panel panel_bt = new Panel();
@@ -140,7 +140,7 @@ public class HomePanel extends Panel {
 			c.weightx=1;
 			c.weighty=1;
 			Label label = new Label("文件预览/编辑区",Label.CENTER);
-			label.setBackground(Color.GRAY);
+			label.setBackground(Color.LIGHT_GRAY);
 			this.addComponent(label,layout,c);
 			
 			//横向纵向可以拉伸
