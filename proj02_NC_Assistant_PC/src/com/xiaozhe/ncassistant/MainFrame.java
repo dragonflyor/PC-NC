@@ -55,9 +55,9 @@ public class MainFrame extends Frame {
 	public static SerialPortManager manager;
 	
 	static{
-		MainFramUiCompononts.manager=manager;
-		MainFramUiCompononts.simpleRead = simpleRead;
-		MainFramUiCompononts.simpleWrite = simpleWrite;
+		//MainFramUiCompononts.manager=manager;
+		//MainFramUiCompononts.simpleRead = simpleRead;
+		//MainFramUiCompononts.simpleWrite = simpleWrite;
 
 	}
 	
@@ -136,6 +136,7 @@ public class MainFrame extends Frame {
 						MainFrame.this.onComRead(event);
 					}
 				};
+				MainFramUiCompononts.manager=manager;
 				//串口设置好之后刷新状态
 				statusBar.setStatusItems(new String[]{
 					SerialPortManager.getComStr(),
@@ -148,6 +149,8 @@ public class MainFrame extends Frame {
 				//获取实例
 				simpleWrite = manager.getPortSimpleWriteInstance();
 				simpleRead = manager.getPortSimpleReadInstance();
+				MainFramUiCompononts.simpleRead = simpleRead;
+				MainFramUiCompononts.simpleWrite = simpleWrite;
 				if(simpleWrite == null){
 					manager.status = "获取串口失败，请检查串口状态";
 					statusBar.setText_status(manager.status);
@@ -199,9 +202,12 @@ public class MainFrame extends Frame {
         case SerialPortEvent.DATA_AVAILABLE:
             byte[] readBuffer = new byte[1024];
 
+            if(simpleRead.inputStream == null){
+            	System.out.println("输入流null错误");
+            }
             try {
-                while (MainFramUiCompononts.simpleRead.inputStream.available() > 0) {
-                    int numBytes = MainFramUiCompononts.simpleRead.inputStream.read(readBuffer);
+                while (simpleRead.inputStream.available() > 0) {
+                    int numBytes =simpleRead.inputStream.read(readBuffer);
                 }
                 String msg = new String(readBuffer);
                 System.out.print(msg);

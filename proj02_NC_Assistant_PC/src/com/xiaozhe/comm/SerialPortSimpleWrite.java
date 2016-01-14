@@ -39,6 +39,9 @@ import java.io.OutputStream;
 
 import javax.comm.SerialPort;
 
+import com.xiaozhe.ncassistant.MainFrame;
+import com.xiaozhe.ncassistant.uicomponont.MainFramUiCompononts;
+
 import sun.rmi.runtime.Log;
 
 public class SerialPortSimpleWrite {
@@ -98,7 +101,7 @@ public void writeString(String datastr){
  */
 public void writeStringToSTM32(String datastr,int loopdelay){
 	if(outputStream != null){
-		
+		boolean ok =true;
 		try {
 			//下位机串口接收的字符串必须以"\r\n"结尾
 			datastr=datastr+"\r\n";
@@ -109,7 +112,15 @@ public void writeStringToSTM32(String datastr,int loopdelay){
 			Thread.sleep(loopdelay);
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("写错误:"+"writeStringToSTM32");
+			
+			ok = false;
+		} finally{
+			if(ok == false){
+				System.out.println("写错误:"+"writeStringToSTM32");
+				MainFramUiCompononts.manager.status = "串口断线";
+				MainFrame.statusBar.setText_status(MainFramUiCompononts.manager.status);
+			}
+		
 		}
 	}else
 	{

@@ -85,7 +85,6 @@ public class HomePanel extends Panel {
                 GridBagConstraints c) {
 			gridbag.setConstraints(component, c);
 			add(component);
-			
 		}
 		
 		void init(){

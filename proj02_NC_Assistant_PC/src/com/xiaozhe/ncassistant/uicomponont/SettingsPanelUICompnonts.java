@@ -1,48 +1,31 @@
 package com.xiaozhe.ncassistant.uicomponont;
 
 import java.awt.Button;
-import java.awt.Font;
-import java.awt.Label;
-import java.awt.TextArea;
+import java.awt.Choice;
 
+public class SettingsPanelUICompnonts {
 
-/**
- * 桌面上控件
- * @author zhe
- *
- */
-public class SettingsPanelUICompnonts{
-	public static Label label_X;
-	public static Label label_Y;
-	public static Label label_Z;
-
-	public static Label label_T;
-	public static Label label_F;
-	public static Label label_S;
+	public static Choice cs_comStr;
+	public static Choice cs_bautRateStr;
+	public static Choice cs_databitsStr;
 	
-	public static Label label_currentGcode;
+	public static Button bt_reopen;
 	
-	public static Button bt_saveImage;
-	
-	public static  TextArea receiveTextArea;
-	
-	static {
-		label_X =new Label("0");
-		label_Y =new Label("0");
-		label_Z =new Label("0");
+	static{
+		//串口号
+		cs_comStr = new Choice();
+		//波特率选项
+		cs_bautRateStr = new Choice();
+		cs_bautRateStr.add("115200");
+		cs_bautRateStr.add("9600");
+		//数据位选项
+		cs_databitsStr = new Choice();
+		cs_databitsStr.add("8");
+		cs_databitsStr.add("7");
 		
-		label_T =new Label("0");
-		label_F =new Label("0");
-		label_S =new Label("0");
-
-		label_currentGcode = new Label("正在运行 :NOT RUNNING", Label.LEFT);
-		label_currentGcode.setFont(new Font("楷体", Font.BOLD, 15));
-
-		
-		//文本框 ,20行20字符宽度
-		receiveTextArea = new TextArea();
-		receiveTextArea.setRows(1);
-		receiveTextArea.setText("");
+		//按钮
+		bt_reopen = new Button("确认设置并重新尝试连接");
 	}
 	
 }
+

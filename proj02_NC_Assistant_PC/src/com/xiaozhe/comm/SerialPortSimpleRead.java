@@ -86,10 +86,13 @@ public class SerialPortSimpleRead implements Runnable, SerialPortEventListener {
     }
 
 	public void run() {
-        try {
+       while(true){
+   		try {
             Thread.sleep(20000);
-            System.out.println("串口接收二十秒超时，退出……");
+           // System.out.println("串口接收二十秒超时，退出……");
         } catch (InterruptedException e) {}
+       }
+
     }
 
     public void serialEvent(SerialPortEvent event) {
@@ -131,7 +134,8 @@ public class SerialPortSimpleRead implements Runnable, SerialPortEventListener {
     public void close(){
       
         if(readThread!=null){
-        	readThread.interrupt();;
+        	readThread.interrupt();
+        	readThread.yield();
         	readThread = null;
         }
         if(serialPort!=null){
