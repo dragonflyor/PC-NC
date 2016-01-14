@@ -50,9 +50,16 @@ public class MainFrame extends Frame {
 	MyMenu myMenu;
 	
 	//串口
-	public SerialPortSimpleWrite simpleWrite;
-	public SerialPortSimpleRead simpleRead;
+	public static SerialPortSimpleWrite simpleWrite;
+	public static SerialPortSimpleRead simpleRead;
 	public static SerialPortManager manager;
+	
+	static{
+		MainFramUiCompononts.manager=manager;
+		MainFramUiCompononts.simpleRead = simpleRead;
+		MainFramUiCompononts.simpleWrite = simpleWrite;
+
+	}
 	
 	//构造
 	public MainFrame(String title) throws HeadlessException {
@@ -102,10 +109,27 @@ public class MainFrame extends Frame {
 				
 				
 				//串口
-				manager = new SerialPortManager("COM5",115200,
-						SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE) {
+//				manager = new SerialPortManager("COM5",115200,
+//						SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE) {
+//					//响应串口接收读数据
+//					@Override
+//					public void serialEvent(SerialPortEvent event) {
+//						// TODO Auto-generated method stub
+//						//应用程序，监听到数据读入
+//						System.out.println("应用程序，监听到数据读入");
+//						//收到数据
+//						MainFrame.this.onComRead(event);
+//					}
+//				};
+				manager = new SerialPortManager(SerialPortManager.getComStr(),
+						SerialPortManager.getBautrate(),
+						SerialPortManager.getSerialPort_DATABIT(),
+						SerialPortManager.getSerialPort_STOPBIT(),
+						SerialPortManager.getSerialPort_PARITY()) {
 					//响应串口接收读数据
+					@Override
 					public void serialEvent(SerialPortEvent event) {
+						// TODO Auto-generated method stub
 						//应用程序，监听到数据读入
 						System.out.println("应用程序，监听到数据读入");
 						//收到数据
@@ -113,19 +137,22 @@ public class MainFrame extends Frame {
 					}
 				};
 				//串口设置好之后刷新状态
-				if(SerialPortManager.getSerialPort()!=null){
-					statusBar.setStatusItems(new String[]{
-							SerialPortManager.getSerialPort().getName(),
-							SerialPortManager.getSerialPort().getDataBits()+"",
-							SerialPortManager.getSerialPort().getParity()+"",
-							SerialPortManager.status
-					});
-				}
+				statusBar.setStatusItems(new String[]{
+					SerialPortManager.getComStr(),
+					SerialPortManager.getBautrate()+"",
+					SerialPortManager.getSerialPort_DATABIT()+"",
+					SerialPortManager.status
+				});
 
 				
 				//获取实例
 				simpleWrite = manager.getPortSimpleWriteInstance();
 				simpleRead = manager.getPortSimpleReadInstance();
+				if(simpleWrite == null){
+					manager.status = "获取串口失败，请检查串口状态";
+					statusBar.setText_status(manager.status);
+				}
+				
 				
 				//页面2------------------------------------------
 				settingsPanel = new SettingsPanel();
@@ -173,8 +200,8 @@ public class MainFrame extends Frame {
             byte[] readBuffer = new byte[1024];
 
             try {
-                while (simpleRead.inputStream.available() > 0) {
-                    int numBytes = simpleRead.inputStream.read(readBuffer);
+                while (MainFramUiCompononts.simpleRead.inputStream.available() > 0) {
+                    int numBytes = MainFramUiCompononts.simpleRead.inputStream.read(readBuffer);
                 }
                 String msg = new String(readBuffer);
                 System.out.print(msg);

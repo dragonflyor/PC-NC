@@ -1,5 +1,6 @@
 package com.xiaozhe.ncassistant;
 
+import java.awt.Color;
 import java.awt.Frame;
 
 public class MyStatusBar extends StatusBar {
@@ -39,6 +40,12 @@ public class MyStatusBar extends StatusBar {
 
 	public void setText_status(String text_status) {
 		MyStatusBar.text_status = text_status;
+		//修改状态条显示颜色
+		if(text_status.contains("成功")||text_status.contains("OK")){
+			this.GetStatu(3).setBackground(Color.GREEN);
+		}else{
+			this.GetStatu(3).setBackground(Color.RED);
+		}
 		//更新标签内容
 		this.SetStatu(3, "串口状态："+text_status);
 	}

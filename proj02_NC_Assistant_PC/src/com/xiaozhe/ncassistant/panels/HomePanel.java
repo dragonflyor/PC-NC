@@ -25,6 +25,7 @@ import java.io.IOException;
 
 import com.xiaozhe.ncassistant.MainFrame;
 import com.xiaozhe.ncassistant.uicomponont.HomePanelUICompnonts;
+import com.xiaozhe.ncassistant.uicomponont.MainFramUiCompononts;
 
 public class HomePanel extends Panel {
 
@@ -176,7 +177,13 @@ public class HomePanel extends Panel {
 					//建立新线程处理发送
 					MainFrame mf = (MainFrame) HomePanel.this.f;
 					System.out.println("发送文本内容");
-					mf.simpleWrite.writeFileToSTM32(file_open, 1000);
+					if(mf.simpleWrite!=null){
+						mf.simpleWrite.writeFileToSTM32(file_open, 1000);
+					}else {
+						System.out.println("mf.simpleWrite为空");
+					}
+					//mf.simpleWrite.writeFileToSTM32(file_open, 1000);
+					
 				}else if(bt == bt_openFile){
 					//打开文件对话框
 					FileDialog d1 = new FileDialog(f, "选择需要打开文件" , FileDialog.LOAD);

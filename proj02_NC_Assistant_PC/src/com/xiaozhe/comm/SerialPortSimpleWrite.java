@@ -70,6 +70,7 @@ public SerialPortSimpleWrite(SerialPort serialPort) {
  * @param ch
  */
 public void write(int ch){
+	
 	try {
 		outputStream.write(ch);
 	} catch (IOException e) {
@@ -96,18 +97,23 @@ public void writeString(String datastr){
  * @param loopdelay 下位机串口轮询的周期，单位ms
  */
 public void writeStringToSTM32(String datastr,int loopdelay){
-
-	try {
-		//下位机串口接收的字符串必须以"\r\n"结尾
-		datastr=datastr+"\r\n";
-		//发送
-		//System.out.println("writeStringToSTM32获取串口输出流:"+outputStream);
-		outputStream.write(datastr.getBytes());
-		//延时
-		Thread.sleep(loopdelay);
-	} catch (Exception e) {
-		e.printStackTrace();
-		System.out.println("写错误:"+"writeStringToSTM32");
+	if(outputStream != null){
+		
+		try {
+			//下位机串口接收的字符串必须以"\r\n"结尾
+			datastr=datastr+"\r\n";
+			//发送
+			//System.out.println("writeStringToSTM32获取串口输出流:"+outputStream);
+			outputStream.write(datastr.getBytes());
+			//延时
+			Thread.sleep(loopdelay);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("写错误:"+"writeStringToSTM32");
+		}
+	}else
+	{
+		System.out.println("writeStringToSTM32获取串口输出流为空");
 	}
 }
 

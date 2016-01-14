@@ -26,12 +26,16 @@ import javax.comm.UnsupportedCommOperationException;
 	static SerialPort serialPort;
 	
 	//通讯参数 默认值如下
-    int bautrate = 115200;
-    int serialPort_DATABIT = SerialPort.DATABITS_8;
-    int serialPort_STOPBIT = SerialPort.STOPBITS_1;
-    int serialPort_PARITY = SerialPort.PARITY_NONE;
-    //状态
+    static int bautrate = 115200;
+    static int serialPort_DATABIT = SerialPort.DATABITS_8;
+    static int serialPort_STOPBIT = SerialPort.STOPBITS_1;
+    static int serialPort_PARITY = SerialPort.PARITY_NONE;
+    static String comStr = "COM5";
+  
+	//状态
     public static String status = "未连接";
+    //COM号
+    
 
 
 	static{
@@ -249,6 +253,89 @@ import javax.comm.UnsupportedCommOperationException;
 	public static SerialPort getSerialPort() {
 		return serialPort;
 	}
+
+	/**
+	 * 获取数据位数
+	 * @return
+	 */
+    public static int getSerialPort_DATABIT() {
+		return serialPort_DATABIT;
+	}
+
+    /**
+     * 获取串口通讯停止位
+     * @return
+     */
+	public static int getSerialPort_STOPBIT() {
+		return serialPort_STOPBIT;
+	}
+
+	/**
+	 * 获取校验模式
+	 * @return
+	 */
+	public static int getSerialPort_PARITY() {
+		return serialPort_PARITY;
+	}
+
+	/**
+	 * 获取波特率
+	 * @return
+	 */
+	public static int getBautrate() {
+		return bautrate;
+	}
+
+	/**
+	 * 获取串口号字符串，如"COM5"
+	 * @return
+	 */
+	public static String getComStr() {
+		return comStr;
+	}
+	
+	/**
+	 * 设置波特率
+	 * @param bautrate
+	 */
+	public static void setBautrate(int bautrate) {
+		SerialPortManager.bautrate = bautrate;
+	}
+
+
+	/**
+	 * 设置串口号
+	 * @param comStr
+	 */
+	public static void setComStr(String comStr) {
+		SerialPortManager.comStr = comStr;
+	}
+
+	/**
+	 * 设置串口数据位数
+	 * @param serialPort_DATABIT
+	 */
+	public static void setSerialPort_DATABIT(int serialPort_DATABIT) {
+		SerialPortManager.serialPort_DATABIT = serialPort_DATABIT;
+	}
+
+	/**
+	 * 设置串口停止位
+	 * @param serialPort_STOPBIT
+	 */
+	public static void setSerialPort_STOPBIT(int serialPort_STOPBIT) {
+		SerialPortManager.serialPort_STOPBIT = serialPort_STOPBIT;
+	}
+
+	/**
+	 * 设置串口检验协议
+	 * @param serialPort_PARITY
+	 */
+	public static void setSerialPort_PARITY(int serialPort_PARITY) {
+		SerialPortManager.serialPort_PARITY = serialPort_PARITY;
+	}
+
+
 
 	
 	/**
