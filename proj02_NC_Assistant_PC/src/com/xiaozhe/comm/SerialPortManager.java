@@ -19,7 +19,9 @@ import javax.comm.UnsupportedCommOperationException;
 	private SerialPortSimpleRead portSimpleRead;
 	private SerialPortSimpleWrite portSimpleWrite;
 	
-	static Enumeration portList;
+	static Enumeration<?> portList;
+	
+
 	static CommPortIdentifier portId;
 	static SerialPort serialPort;
 	
@@ -28,6 +30,8 @@ import javax.comm.UnsupportedCommOperationException;
     int serialPort_DATABIT = SerialPort.DATABITS_8;
     int serialPort_STOPBIT = SerialPort.STOPBITS_1;
     int serialPort_PARITY = SerialPort.PARITY_NONE;
+    //状态
+    public static String status = "未连接";
 
 
 	static{
@@ -90,12 +94,12 @@ import javax.comm.UnsupportedCommOperationException;
 	 * 以字符串集合的方式返回当前系统可识别的串口（COM）号
 	 * @return 端口号的字符集合
 	 */
-	public static ArrayList getAvailablePorts(){
+	public static ArrayList<String> getAvailablePorts(){
 
 		//重新获取系统COM列表
 		portList = CommPortIdentifier.getPortIdentifiers();
 		//列表保存成字符串集合
-		ArrayList portstrList = new ArrayList();
+		ArrayList<String> portstrList = new ArrayList<String>();
 		 //遍历集合
         while (portList.hasMoreElements()) {
             portId = (CommPortIdentifier) portList.nextElement();
@@ -119,13 +123,18 @@ import javax.comm.UnsupportedCommOperationException;
 	private SerialPort openPort(String comPort){
 		//重新获取系统COM列表
 		portList = CommPortIdentifier.getPortIdentifiers();
+		status = "portList"+portList;
+		//System.out.println("openPort(String comPort)--portList"+portList);
 		if(portList.hasMoreElements()!=true){
 			System.out.println("打开端口失败，检测不到Com");
+			status = "打开端口失败，检测不到Com";
 			return null;
 		}
 		
 		SerialPort serialPort = null;
 		  //遍历集合
+		//连接成功的标志
+		boolean b_cennected = false;
         while (portList.hasMoreElements()) {
             portId = (CommPortIdentifier) portList.nextElement();
             if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL) {
@@ -136,20 +145,32 @@ import javax.comm.UnsupportedCommOperationException;
                         try {
 							serialPort = (SerialPort)
 							    portId.open("SerialPortManager", 2000);
-							
+								
 							   serialPort.setSerialPortParams(this.bautrate,
 			                            this.serialPort_DATABIT,
 			                            this.serialPort_STOPBIT,
 			                           this.serialPort_PARITY);
 							   
+							   System.out.println("已连接的串口serialPort："+serialPort);
+							   status = "连接成功";
+							 //连接成功
+							   b_cennected = true;
+							   
 						} catch (PortInUseException e) {
 							System.out.println("端口被占用");
+							status = "端口被占用";
 						} catch (UnsupportedCommOperationException e) {
 							System.out.println("串口设置的参数不支持");
+							status = "串口设置的参数不支持";
 						}
                 }
             }
 
+        }
+        
+        if(b_cennected == false){
+     	   System.out.println("设置的端口不可用");
+		   status = "设置的端口不可用";
         }
 		return serialPort;
 	}
@@ -220,6 +241,16 @@ import javax.comm.UnsupportedCommOperationException;
 		portSimpleWrite.close();
 		
 	}
+	
+	/**
+	 * 获取串口对象
+	 * @return
+	 */
+	public static SerialPort getSerialPort() {
+		return serialPort;
+	}
+
+	
 	/**
 	 * 处理串口读到数据后怎么处理
 	 * @param event

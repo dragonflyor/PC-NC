@@ -28,6 +28,7 @@ import com.xiaozhe.ncassistant.panels.HomePanel;
 import com.xiaozhe.ncassistant.panels.InternetPanel;
 import com.xiaozhe.ncassistant.panels.SettingsPanel;
 import com.xiaozhe.ncassistant.uicomponont.HomePanelUICompnonts;
+import com.xiaozhe.ncassistant.uicomponont.MainFramUiCompononts;
 
 public class MainFrame extends Frame {
 
@@ -45,13 +46,13 @@ public class MainFrame extends Frame {
 	static public InternetPanel internetPanel;
 	
 	//组件
-	StatusBar statusBar;
+	static public MyStatusBar statusBar;
 	MyMenu myMenu;
 	
 	//串口
 	public SerialPortSimpleWrite simpleWrite;
 	public SerialPortSimpleRead simpleRead;
-	static SerialPortManager manager;
+	public static SerialPortManager manager;
 	
 	//构造
 	public MainFrame(String title) throws HeadlessException {
@@ -66,10 +67,6 @@ public class MainFrame extends Frame {
 		//可见
 		this.setVisible(true);
 	}
-	
-	
-
-
 	
 	/**
 	 * 初始化 
@@ -90,9 +87,9 @@ public class MainFrame extends Frame {
 				this.setLayout(new BorderLayout());
 				
 				//添加状态栏
-				String [] statusItems = {"COM:","波特率:","数据位数:","串口状态:"};
-				statusBar = new StatusBar(statusItems, this);
+				statusBar = new MyStatusBar(this);
 				this.add(statusBar, BorderLayout.SOUTH); 
+
 				
 				//setMenus();
 				//按键菜单
@@ -115,6 +112,16 @@ public class MainFrame extends Frame {
 						MainFrame.this.onComRead(event);
 					}
 				};
+				//串口设置好之后刷新状态
+				if(SerialPortManager.getSerialPort()!=null){
+					statusBar.setStatusItems(new String[]{
+							SerialPortManager.getSerialPort().getName(),
+							SerialPortManager.getSerialPort().getDataBits()+"",
+							SerialPortManager.getSerialPort().getParity()+"",
+							SerialPortManager.status
+					});
+				}
+
 				
 				//获取实例
 				simpleWrite = manager.getPortSimpleWriteInstance();
