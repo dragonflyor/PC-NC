@@ -1,11 +1,13 @@
 package com.xiaozhe.comm;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.TooManyListenersException;
 
 import javax.comm.CommPortIdentifier;
 import javax.comm.PortInUseException;
 import javax.comm.SerialPort;
 import javax.comm.SerialPortEvent;
+import javax.comm.SerialPortEventListener;
 import javax.comm.UnsupportedCommOperationException;
 
 /**
@@ -23,16 +25,17 @@ import javax.comm.UnsupportedCommOperationException;
 	static CommPortIdentifier portId;
 	static SerialPort serialPort;
 	
+	
 	//通讯参数 默认值如下
     int bautrate = 115200;
     int serialPort_DATABIT = SerialPort.DATABITS_8;
     int serialPort_STOPBIT = SerialPort.STOPBITS_1;
     int serialPort_PARITY = SerialPort.PARITY_NONE;
 
-
 	static{
 		//获取系统COM列表
 		 portList = CommPortIdentifier.getPortIdentifiers();
+		 
 	}
 	
 	/**
@@ -56,6 +59,7 @@ import javax.comm.UnsupportedCommOperationException;
 	/**
 	 * 默认参数构造
 	 * @param comPort
+	 * @throws TooManyListenersException 
 	 */
 	 public SerialPortManager(String comPort) {
 		super();

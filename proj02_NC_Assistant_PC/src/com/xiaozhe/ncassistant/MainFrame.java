@@ -199,7 +199,7 @@ public class MainFrame extends Frame {
         case SerialPortEvent.DSR:
         case SerialPortEvent.RI:
         case SerialPortEvent.OUTPUT_BUFFER_EMPTY:
-        	System.out.println("串口错误状态号是："+event.getEventType());
+        	System.out.println("--------串口错误状态号是："+event.getEventType());
             break;
         case SerialPortEvent.DATA_AVAILABLE:
             byte[] readBuffer = new byte[1024];
@@ -230,7 +230,10 @@ public class MainFrame extends Frame {
                 	String [] param = NCUtils.parseParamFromMsg1(msg);               	
                     HomePanelUICompnonts.label_X.setText(param[0]);
                     HomePanelUICompnonts.label_Y.setText(param[1]);
-                    HomePanelUICompnonts.label_Z.setText(param[1]);
+                    HomePanelUICompnonts.label_Z.setText(param[2]);
+                    HomePanelUICompnonts.label_T.setText(param[3]);
+                    HomePanelUICompnonts.label_F.setText(param[4]);
+                    HomePanelUICompnonts.label_S.setText(param[5]);
 
                     //刷新
                     HomePanelUICompnonts.receiveTextArea.invalidate();
@@ -395,6 +398,7 @@ public class MainFrame extends Frame {
 					//单出其他选项的菜单	
 					popupmenu.show((Component) popupmenu.getParent(),0, bt.getY()+bt.getHeight());
 					
+//					MainFrame.this.init();
 //					String text ="";
 //	                int i=5;
 //	                while(i--!=0){
