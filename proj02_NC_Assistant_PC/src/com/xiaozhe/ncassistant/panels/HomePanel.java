@@ -63,6 +63,8 @@ public class HomePanel extends Panel {
 	 */
 	class SendPanel extends Panel{
 		Button bt_send;
+		Button bt_send_run;
+		
 		Button bt_openFile;
 		Button bt_saveFile;
 		
@@ -98,6 +100,7 @@ public class HomePanel extends Panel {
 			Panel panel_bt = new Panel();
 			panel_bt.setBackground(Color.darkGray);
 			bt_send = new Button("发送给下位机");
+			bt_send_run = new Button("发送并执行");
 			bt_openFile = new Button("打开文件");
 			bt_saveFile = new Button("另存文本区内容");
 			
@@ -112,6 +115,7 @@ public class HomePanel extends Panel {
 //			panel_bt.add(bt_openFile);
 //			panel_bt.add(bt_saveFile);
 			addComponent(bt_send, layout1, c1);
+			addComponent(bt_send_run, layout1, c1);
 			addComponent(new Label("  "), layout1, c1);
 			addComponent(bt_openFile, layout1, c1);
 			addComponent(bt_saveFile, layout1, c1);
@@ -161,6 +165,7 @@ public class HomePanel extends Panel {
 			bt_openFile.addActionListener(new MYBtnListener());
 			bt_saveFile.addActionListener(new MYBtnListener());
 			bt_send.addActionListener(new MYBtnListener());
+			bt_send_run.addActionListener(new MYBtnListener());
 		}
 		
 		/**
@@ -177,13 +182,23 @@ public class HomePanel extends Panel {
 					MainFrame mf = (MainFrame) HomePanel.this.f;
 					System.out.println("发送文本内容");
 					if(mf.simpleWrite!=null){
-						mf.simpleWrite.writeFileToSTM32(file_open, 1000);
+						mf.simpleWrite.writeFileToSTM32(file_open, 500,0);
 					}else {
 						System.out.println("mf.simpleWrite为空");
 					}
 					//mf.simpleWrite.writeFileToSTM32(file_open, 1000);
 					
-				}else if(bt == bt_openFile){
+				}else if(bt == bt_send_run){
+					//建立新线程处理发送
+					MainFrame mf = (MainFrame) HomePanel.this.f;
+					System.out.println("发送文本内容并执行");
+					if(mf.simpleWrite!=null){
+						mf.simpleWrite.writeFileToSTM32(file_open, 500,1);
+					}else {
+						System.out.println("mf.simpleWrite为空");
+					}
+				}
+				else if(bt == bt_openFile){
 					//打开文件对话框
 					FileDialog d1 = new FileDialog(f, "选择需要打开文件" , FileDialog.LOAD);
 					d1.setVisible(true);

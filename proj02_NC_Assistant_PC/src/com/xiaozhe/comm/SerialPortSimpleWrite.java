@@ -131,24 +131,36 @@ public void writeStringToSTM32(String datastr,int loopdelay){
 /**
  * 发送文件给STM32，读出文本内容分行发给STM32
  * @param file 要传送文本文件
- * @param loopdelay 
+ * @param loopdelay 轮询时间
+ * @param sendmode 发送模式 0：表示只发送 非0：表示发送后执行
  */
-public void writeFileToSTM32(final File file , final int loopdelay){
-			
+public void writeFileToSTM32(final File file , final int loopdelay, final int sendmode){
+
 		Thread sendfileThread = new Thread(){
+
 			public void run() {
+				String  cmdheader;
+				if(sendmode == 0){
+					cmdheader=">>01";
+				}else{
+					cmdheader=">>02";
+				}
 				try {
 					FileReader fr = new FileReader(file);
 					BufferedReader br = new BufferedReader(fr);
 					
 					String line = null;
+					//发送文件开始发送的协议码：>>01+filename
+					SerialPortSimpleWrite.this.writeString(cmdheader+file.getName()+"\r\n");
+					Thread.sleep(loopdelay);
 					while((line = br.readLine())!=null){
 						System.out.println("发送："+line);
 						//发送一行
 						writeStringToSTM32(line,loopdelay);
 					}
+					Thread.sleep(loopdelay);
 					//发送结束标志"$$"
-					SerialPortSimpleWrite.this.writeString("$$sendover");
+					SerialPortSimpleWrite.this.writeString("$$01 \r\n");
 					//延时
 					Thread.sleep(loopdelay);
 					

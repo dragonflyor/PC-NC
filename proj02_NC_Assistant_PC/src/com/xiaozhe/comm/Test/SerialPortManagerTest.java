@@ -111,7 +111,7 @@ public class SerialPortManagerTest {
 		File file = new File(filepath,"/sendoutdata.txt");
 		//	file.createNewFile();
 		//第二个参数是下位机串口轮询的周期
-		simpleWrite.writeFileToSTM32(file, 300);
+		simpleWrite.writeFileToSTM32(file, 300,0);
 		
 		//结束发送时间
 		long endtime = System.currentTimeMillis();

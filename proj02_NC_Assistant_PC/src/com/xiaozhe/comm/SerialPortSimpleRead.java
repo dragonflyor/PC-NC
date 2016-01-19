@@ -124,8 +124,13 @@ public class SerialPortSimpleRead implements Runnable, SerialPortEventListener {
 //           
 //            break;
 //        }
+        if(serialPortManager!=null){
+        	serialPortManager.serialEvent(event);
+        }
+        else{
+        	System.out.println("serialPortManagerÎª¿Õ");
+        }
         
-        serialPortManager.serialEvent(event);
     }
     
    /**
