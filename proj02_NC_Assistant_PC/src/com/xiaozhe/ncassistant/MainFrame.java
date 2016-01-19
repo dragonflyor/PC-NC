@@ -16,6 +16,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.util.HashMap;
 
 import javax.comm.SerialPort;
 import javax.comm.SerialPortEvent;
@@ -29,6 +30,7 @@ import com.xiaozhe.ncassistant.panels.InternetPanel;
 import com.xiaozhe.ncassistant.panels.SettingsPanel;
 import com.xiaozhe.ncassistant.uicomponont.HomePanelUICompnonts;
 import com.xiaozhe.ncassistant.uicomponont.MainFramUiCompononts;
+import com.xiaozhe.utils.NCUtils;
 
 public class MainFrame extends Frame {
 
@@ -204,6 +206,11 @@ public class MainFrame extends Frame {
 
             if(simpleRead.inputStream == null){
             	System.out.println("输入流null错误");
+				//获取实例
+				simpleWrite = manager.getPortSimpleWriteInstance();
+				simpleRead = manager.getPortSimpleReadInstance();
+				
+            	return;
             }
             try {
                 while (simpleRead.inputStream.available() > 0) {
@@ -212,10 +219,24 @@ public class MainFrame extends Frame {
                 String msg = new String(readBuffer);
                 System.out.print(msg);
                 
-                //显示到控件
-                HomePanelUICompnonts.receiveTextArea.setText(HomePanelUICompnonts.receiveTextArea.getText()+msg);
+                //显示到文本区控件
+               // HomePanelUICompnonts.receiveTextArea.setText(HomePanelUICompnonts.receiveTextArea.getText()+msg);
+                HomePanelUICompnonts.receiveTextArea.append(msg);
                 //刷新
                 HomePanelUICompnonts.receiveTextArea.invalidate();
+                
+                //刷新参数值
+                if(msg.startsWith(">>10")){
+                	String [] param = NCUtils.parseParamFromMsg1(msg);               	
+                    HomePanelUICompnonts.label_X.setText(param[0]);
+                    HomePanelUICompnonts.label_Y.setText(param[1]);
+                    HomePanelUICompnonts.label_Z.setText(param[1]);
+
+                    //刷新
+                    HomePanelUICompnonts.receiveTextArea.invalidate();
+                      
+                }
+
                 
             } catch (IOException e) {}
             break;
