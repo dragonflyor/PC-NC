@@ -89,44 +89,48 @@ public class InternetPanel extends Panel {
 	 * 设置监听
 	 */
 	void setEvent(){
-		button_connect.addActionListener(new ActionListener() {
-					
-					public void actionPerformed(ActionEvent e) {
-						// TODO Auto-generated method stub
-						Button bt = (Button) e.getSource();
-						if(bt == button_connect){
-							//ArrayList<Resources> arrayList = MyHttpUtils.getFileResources("http://172.26.164.3:8080/day22_upload_download/ReturnFileListServlet");
-							ArrayList<Resources> arrayList = MyHttpUtils.getFileResources(NetPanelComponents.textField.getText());
-							
-							for (Resources resources : arrayList) {
-								System.out.println("----------------------");
-								System.out.println("名称："+resources.getRealname());
-								System.out.println("描述："+resources.getDescription());
-								System.out.println("保存路径："+resources.getSavepath());
-								System.out.println("Uuidname："+resources.getUuidname());
-							}
-							
-							if(NetPanelComponents.filesPanel !=null){
-								contentPane.remove(NetPanelComponents.filesPanel);
-							}
-							NetPanelComponents.filesPanel= new FilesPanel(arrayList);
+		button_connect.addActionListener(new MyBtListner());
+	}
+	
+	
+	class MyBtListner implements ActionListener {
+
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			Button bt = (Button) e.getSource();
+			if(bt == button_connect){
+				//ArrayList<Resources> arrayList = MyHttpUtils.getFileResources("http://172.26.164.3:8080/day22_upload_download/ReturnFileListServlet");
+				ArrayList<Resources> arrayList = MyHttpUtils.getFileResources(NetPanelComponents.textField.getText());
 				
-							c.gridwidth = GridBagConstraints.REMAINDER;
-							c.anchor = GridBagConstraints.NORTH;
-							c.fill = GridBagConstraints.BOTH;
-							c.weightx = 10;
-							c.weighty = 10;
-							
-							NCUtils.addComponentTo(contentPane, NetPanelComponents.filesPanel, bagLayout, c);
-							//contentPane.add(NetPanelComponents.filesPanel);
-							contentPane.invalidate();
-							contentPane.setVisible(true);
-							//刷新主窗口
-							NCAssistant.mainFrame.invalidate();
-							NCAssistant.mainFrame.setVisible(true);
-						}
-					}
-				});	
+				for (Resources resources : arrayList) {
+					System.out.println("----------------------");
+					System.out.println("名称："+resources.getRealname());
+					System.out.println("描述："+resources.getDescription());
+					System.out.println("保存路径："+resources.getSavepath());
+					System.out.println("Uuidname："+resources.getUuidname());
+				}
+				
+				if(NetPanelComponents.filesPanel !=null){
+					contentPane.remove(NetPanelComponents.filesPanel);
+				}
+				NetPanelComponents.filesPanel= new FilesPanel(arrayList);
+	
+				c.gridwidth = GridBagConstraints.REMAINDER;
+				c.anchor = GridBagConstraints.NORTH;
+				c.fill = GridBagConstraints.BOTH;
+				c.weightx = 10;
+				c.weighty = 10;
+				
+				NCUtils.addComponentTo(contentPane, NetPanelComponents.filesPanel, bagLayout, c);
+				//contentPane.add(NetPanelComponents.filesPanel);
+				contentPane.invalidate();
+				contentPane.setVisible(true);
+				//刷新主窗口
+				NCAssistant.mainFrame.invalidate();
+				NCAssistant.mainFrame.setVisible(true);
+			}
+		}
+		
 	}
 
 	

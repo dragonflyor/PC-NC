@@ -1,17 +1,23 @@
 package com.xiaozhe.Filelist;
 
 import java.awt.Button;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Label;
 import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import com.littlebigberry.httpfiledownloader.FileDownloader;
 import com.littlebigberry.httpfiledownloader.FileDownloaderDelegate;
 import com.xiaozhe.bean.Resources;
+import com.xiaozhe.ncassistant.MainFrame;
+import com.xiaozhe.ncassistant.NCAssistant;
+import com.xiaozhe.ncassistant.panels.HomePanel;
 import com.xiaozhe.ncassistant.uicomponont.NetPanelComponents;
+import com.xiaozhe.utils.NCUtils;
 
 public class ItemPanel extends Panel {
 
@@ -108,6 +114,21 @@ public class ItemPanel extends Panel {
 			}
 			else if(button == bt_download_run){
 				System.out.println("下载后执行："+resources.getRealname());
+				
+				//建立新线程处理发送
+				MainFrame mf = NCAssistant.mainFrame;
+				System.out.println("发送文本内容并执行");
+				if(mf.simpleWrite!=null){
+					File file = new File(System.getProperty("user.dir", "C:/Users/zhe/Desktop")+resources.getRealname());
+					mf.simpleWrite.writeFileToSTM32(file, 500,1);
+				}else {
+					System.out.println("mf.simpleWrite为空,是否开启了串口");
+					
+					
+					MainFrame.statusBar.setText_status("串口错误，不能发送文件");
+					//刷新显示
+					NCUtils.invalideMainFrame();
+				}
 			}
 			
 		}

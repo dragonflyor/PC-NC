@@ -48,7 +48,7 @@ public class MainFrame extends Frame {
 	static public InternetPanel internetPanel;
 	
 	//×é¼þ
-	static public MyStatusBar statusBar;
+	public static  MyStatusBar statusBar;
 	MyMenu myMenu;
 	
 	//´®¿Ú

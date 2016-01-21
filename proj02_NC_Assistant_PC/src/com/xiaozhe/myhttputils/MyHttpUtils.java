@@ -1,5 +1,6 @@
 package com.xiaozhe.myhttputils;
 
+import java.awt.Dialog;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStreamReader;
@@ -12,6 +13,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import com.xiaozhe.bean.Resources;
+import com.xiaozhe.ncassistant.MainFrame;
+import com.xiaozhe.ncassistant.NCAssistant;
 
 public class MyHttpUtils {
 

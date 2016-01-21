@@ -7,6 +7,8 @@ import java.awt.GridBagLayout;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.xiaozhe.ncassistant.NCAssistant;
+
 public class NCUtils {
 	
 	/**
@@ -63,5 +65,14 @@ public class NCUtils {
 		String [] strs = tmp.split("#");
 		System.out.println("解析出来的参数："+strs.toString());
 		return strs;
+	}
+	
+	
+	/**
+	 * 主串口组件发生变化后，刷新窗口，如添加和修改控件后
+	 */
+	public static void invalideMainFrame(){
+		NCAssistant.mainFrame.invalidate();
+		NCAssistant.mainFrame.setVisible(true);
 	}
 }
